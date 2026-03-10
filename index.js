@@ -19,6 +19,32 @@ function animaster() {
     }
 
     return {
+        _steps: [],
+
+        addMove(duration, translation) {
+            this._steps.push({
+                name: 'move',
+                duration: duration,
+                params: translation
+            });
+            return this;
+        },
+
+        play(element) {
+            let delay = 0;
+            for (let step of this._steps) {
+                setTimeout(() => {
+                    this[step.name](element, step.duration, step.params);
+                }, delay);
+                delay += step.duration;
+            }
+        },
+        
+        /**
+         * Блок плавно появляется из прозрачного.
+         * @param {HTMLElement} element — HTMLElement, который надо анимировать
+         * @param {number} duration — Продолжительность анимации в миллисекундах
+         */
         fadeIn(element, duration) {
             element.style.transitionDuration = `${duration}ms`;
             element.classList.remove('hide');
